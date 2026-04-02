@@ -18,7 +18,7 @@ html, body {
 
 body {
     display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     gap: 10px;
     min-height: 100vh;
     padding: 10px;
@@ -86,6 +86,14 @@ h1 {
 
 #view-dados,
 #view-analise {
+    height: 100%;
+    min-height: 0;
+}
+
+.analise-layout {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
     height: 100%;
     min-height: 0;
 }
@@ -193,7 +201,7 @@ canvas {
 
 @media (max-width: 640px) {
     body {
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto auto auto;
         overflow: auto;
     }
 
@@ -225,6 +233,7 @@ canvas {
     .main,
     #view-dados,
     #view-analise,
+    .analise-layout,
     .analise-container {
         height: auto;
         min-height: auto;
@@ -323,10 +332,8 @@ canvas {
 
 <h1>📊 Dashboard de Controle de Estoque</h1>
 
-<div class="cards" id="cards"></div>
-
 <div class="tabs">
-<button type="button" onclick="trocarAba(event, 'dados')" class="active">Dados Iniciais</button>
+<button type="button" onclick="trocarAba(event, 'dados')" class="active">Dados dos Produtos</button>
 <button type="button" onclick="trocarAba(event, 'analise')">Análise</button>
 </div>
 
@@ -354,6 +361,10 @@ canvas {
 
 <!-- ANALISE -->
 <div id="view-analise" style="display:none;">
+<div class="analise-layout">
+
+<div class="cards" id="cards"></div>
+
 <div class="analise-container">
 
 <div class="tabela-analise">
@@ -381,6 +392,7 @@ canvas {
 <canvas id="grafico"></canvas>
 </div>
 
+</div>
 </div>
 </div>
 
