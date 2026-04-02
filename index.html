@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Estoque</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    gap: 10px;
+    min-height: 100vh;
+    padding: 10px;
+    overflow: hidden;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+/* CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    font-size: 0.95rem;
+}
+
+.card p {
+    margin-top: 4px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* ABAS */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tabs button {
+    padding: 6px 14px;
+    border: none;
+    background: #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tabs button.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    min-height: 0;
+}
+
+#view-dados,
+#view-analise {
+    height: 100%;
+    min-height: 0;
+}
+
+#view-dados,
+.tabela-analise,
+.grafico-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 10px;
+    overflow: hidden;
+}
+
+/* TABELA */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: clamp(11px, 0.95vw, 14px);
+    background: white;
+}
+
+th, td {
+    padding: 5px 4px;
+    text-align: center;
+    line-height: 1.15;
+    word-break: break-word;
+}
+
+td[title] {
+    cursor: help;
+}
+
+th {
+    background: #e2e8f0;
+    white-space: nowrap;
+}
+
+tr.comprar {
+    background: rgba(239, 68, 68, 0.2);
+    font-weight: bold;
+}
+
+tr.ok {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+/* ANALISE FLEX */
+.analise-container {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(220px, 1.15fr);
+    gap: 10px;
+    height: 100%;
+    min-height: 0;
+}
+
+/* TABELA ANALISE */
+.tabela-analise {
+    min-height: 0;
+}
+
+/* GRÁFICO */
+.grafico-container {
+    min-height: 0;
+    width: 100%;
+    max-width: 700px;
+    justify-self: center;
+}
+
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media (max-width: 900px) {
+    body {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .cards {
+        gap: 8px;
+    }
+
+    .card {
+        padding: 8px 6px;
+    }
+
+    .tabs button {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        padding: 4px 3px;
+        font-size: 10px;
+    }
+
+    .analise-container {
+        grid-template-rows: minmax(0, 1fr) minmax(180px, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        grid-template-rows: auto auto auto auto;
+        overflow: auto;
+    }
+
+    h1 {
+        font-size: 1rem;
+    }
+
+    .cards {
+        gap: 6px;
+    }
+
+    .card h3 {
+        font-size: 0.78rem;
+    }
+
+    .card p {
+        font-size: 1.1rem;
+    }
+
+    .tabs {
+        gap: 8px;
+    }
+
+    .tabs button {
+        flex: 1;
+        max-width: 140px;
+    }
+
+    .main,
+    #view-dados,
+    #view-analise,
+    .analise-container {
+        height: auto;
+        min-height: auto;
+    }
+
+    .analise-container {
+        grid-template-rows: auto 180px;
+    }
+
+    .grafico-container {
+        width: 100%;
+        max-width: none;
+        min-height: 180px;
+    }
+
+    .responsive-table {
+        border-collapse: separate;
+        table-layout: auto;
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody {
+        display: grid;
+        gap: 10px;
+    }
+
+    .responsive-table tr {
+        display: grid;
+        gap: 3px;
+        padding: 10px;
+        border: 1px solid #dbe4ee;
+        border-radius: 12px;
+        background: #f8fafc;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    }
+
+    .responsive-table tr.comprar {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(220, 38, 38, 0.25);
+    }
+
+    .responsive-table tr.ok {
+        background: rgba(34, 197, 94, 0.10);
+        border-color: rgba(22, 163, 74, 0.18);
+    }
+
+    .responsive-table td {
+        display: grid;
+        grid-template-columns: minmax(104px, 42%) minmax(0, 1fr);
+        align-items: start;
+        gap: 8px;
+        padding: 4px 0;
+        border-bottom: 1px dashed #dbe4ee;
+        text-align: left;
+        font-size: 0.82rem;
+        word-break: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .responsive-table td:last-child {
+        border-bottom: none;
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .responsive-table td:first-child {
+        grid-template-columns: 1fr;
+        gap: 2px;
+        padding-top: 0;
+        padding-bottom: 6px;
+        margin-bottom: 2px;
+        border-bottom: 1px solid #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .responsive-table td:first-child::before {
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 Dashboard de Controle de Estoque</h1>
+
+<div class="cards" id="cards"></div>
+
+<div class="tabs">
+<button type="button" onclick="trocarAba(event, 'dados')" class="active">Dados Iniciais</button>
+<button type="button" onclick="trocarAba(event, 'analise')">Análise</button>
+</div>
+
+<div class="main">
+
+<!-- DADOS -->
+<div id="view-dados">
+<table class="responsive-table">
+<thead>
+<tr>
+<th>Produto</th>
+<th>Consumo Mensal</th>
+<th>TR</th>
+<th>Segurança</th>
+<th>Lote</th>
+<th>Estoque Atual</th>
+<th>Estoque Médio</th>
+<th>Faltas</th>
+<th>Pedidos</th>
+</tr>
+</thead>
+<tbody id="dadosIniciais"></tbody>
+</table>
+</div>
+
+<!-- ANALISE -->
+<div id="view-analise" style="display:none;">
+<div class="analise-container">
+
+<div class="tabela-analise">
+<table class="responsive-table">
+<thead>
+<tr>
+<th>Produto</th>
+<th>Giro</th>
+<th>Consumo Diário</th>
+<th>Cobertura</th>
+<th>Ruptura (%)</th>
+<th>Est. Mín</th>
+<th>Est. Seg</th>
+<th>P. Pedido</th>
+<th>Est. Máx</th>
+<th>Comprar?</th>
+<th>Quanto</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<div class="grafico-container">
+<canvas id="grafico"></canvas>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+const dados = [
+{produto:"Arroz", consumo:300, estoqueMedio:100, atual:150, faltas:2, pedidos:50, tr:8, ds:4, lote:200},
+{produto:"Feijão", consumo:240, estoqueMedio:80, atual:90, faltas:5, pedidos:40, tr:6, ds:3, lote:150},
+{produto:"Óleo", consumo:150, estoqueMedio:60, atual:140, faltas:6, pedidos:30, tr:10, ds:5, lote:200},
+{produto:"Açúcar", consumo:180, estoqueMedio:50, atual:200, faltas:1, pedidos:25, tr:7, ds:3, lote:120}
+];
+
+// DADOS INICIAIS
+dados.forEach(p => {
+    document.getElementById("dadosIniciais").innerHTML += `
+    <tr>
+        <td data-label="Produto">${p.produto}</td>
+        <td data-label="Consumo Mensal">${p.consumo}</td>
+        <td data-label="TR">${p.tr}</td>
+        <td data-label="Segurança">${p.ds}</td>
+        <td data-label="Lote">${p.lote}</td>
+        <td data-label="Estoque Atual">${p.atual}</td>
+        <td data-label="Estoque Médio">${p.estoqueMedio}</td>
+        <td data-label="Faltas">${p.faltas}</td>
+        <td data-label="Pedidos">${p.pedidos}</td>
+    </tr>`;
+});
+
+// ANÁLISE
+let totalRuptura = 0;
+let itensComprar = 0;
+
+dados.forEach(p => {
+
+    let cd = p.consumo / 30;
+    let giro = p.consumo / p.estoqueMedio;
+    let cobertura = p.atual / cd;
+    let ruptura = (p.faltas / p.pedidos) * 100;
+
+    let emin = cd * p.tr;
+    let es = cd * p.ds;
+    let pp = emin + es;
+    let emax = emin + p.lote;
+
+    let estoqueReal = p.atual - es;
+    let comprar = estoqueReal <= pp;
+    let quanto = comprar ? (emax - p.atual) : 0;
+    let cdTexto = cd.toFixed(2);
+    let giroTexto = giro.toFixed(2);
+    let coberturaTexto = cobertura.toFixed(2);
+    let rupturaTexto = ruptura.toFixed(1);
+    let eminTexto = emin.toFixed(0);
+    let esTexto = es.toFixed(0);
+    let ppTexto = pp.toFixed(0);
+    let emaxTexto = emax.toFixed(0);
+
+    if (comprar) itensComprar++;
+    totalRuptura += ruptura;
+
+    document.getElementById("tbody").innerHTML += `
+    <tr class="${comprar ? "comprar" : "ok"}">
+        <td data-label="Produto">${p.produto}</td>
+        <td data-label="Giro" title="Giro = Consumo Mensal / Estoque Medio (${p.consumo} / ${p.estoqueMedio})">${giroTexto}</td>
+        <td data-label="Consumo Diário" title="Consumo Diario = Consumo Mensal / 30 (${p.consumo} / 30)">${cdTexto}</td>
+        <td data-label="Cobertura" title="Cobertura = Estoque Atual / Consumo Diario (${p.atual} / ${cdTexto})">${coberturaTexto}</td>
+        <td data-label="Ruptura (%)" title="Ruptura = Faltas / Pedidos x 100 (${p.faltas} / ${p.pedidos} x 100)">${rupturaTexto}%</td>
+        <td data-label="Est. Mín" title="Estoque Minimo = Consumo Diario x TR (${cdTexto} x ${p.tr})">${eminTexto}</td>
+        <td data-label="Est. Seg" title="Estoque de Seguranca = Consumo Diario x Seguranca (${cdTexto} x ${p.ds})">${esTexto}</td>
+        <td data-label="P. Pedido" title="Ponto de Pedido = Est. Min + Est. Seg (${eminTexto} + ${esTexto})">${ppTexto}</td>
+        <td data-label="Est. Máx" title="Estoque Maximo = Est. Min + Lote (${eminTexto} + ${p.lote})">${emaxTexto}</td>
+        <td data-label="Comprar?" title="Comprar se Estoque Real <= Ponto de Pedido ((${p.atual} - ${esTexto}) <= ${ppTexto})">
+            ${
+                comprar
+                ? `<strong style="color:#dc2626;">⚠️ COMPRAR</strong>`
+                : `<span style="color:#16a34a;">OK</span>`
+            }
+        </td>
+        <td data-label="Quanto" title="${comprar ? `Quanto Comprar = Est. Max - Estoque Atual (${emaxTexto} - ${p.atual})` : 'Nao precisa comprar, entao o valor e 0'}">${quanto}</td>
+    </tr>`;
+});
+
+// CARDS
+document.getElementById("cards").innerHTML = `
+<div class="card"><h3>Itens para Comprar</h3><p>${itensComprar}</p></div>
+<div class="card"><h3>Ruptura Média</h3><p>${(totalRuptura / dados.length).toFixed(1)}%</p></div>
+<div class="card"><h3>Total Produtos</h3><p>${dados.length}</p></div>
+`;
+
+// GRÁFICO
+new Chart(document.getElementById("grafico"), {
+    type: 'bar',
+    data: {
+        labels: dados.map(p => p.produto),
+        datasets: [
+            { label: 'Atual', data: dados.map(p => p.atual), backgroundColor: '#2563eb' },
+            { label: 'Mínimo', data: dados.map(p => p.consumo/30*p.tr), backgroundColor: '#94a3b8' },
+            { label: 'Ponto de Pedido', data: dados.map(p => (p.consumo/30*p.tr)+(p.consumo/30*p.ds)), backgroundColor: '#f59e0b' },
+            { label: 'Máximo', data: dados.map(p => (p.consumo/30*p.tr)+p.lote), backgroundColor: '#dc2626' }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        layout: {
+            padding: {
+                top: 6,
+                right: 10,
+                bottom: 0,
+                left: 10
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    boxWidth: 12,
+                    padding: 12,
+                    font: {
+                        size: 11
+                    }
+                }
+            }
+        },
+        datasets: {
+            bar: {
+                maxBarThickness: 36,
+                categoryPercentage: 0.7,
+                barPercentage: 0.9,
+                borderRadius: 4
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    maxRotation: 0,
+                    minRotation: 0,
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
+            }
+        }
+    }
+});
+
+// ABAS
+function trocarAba(event, tipo){
+    document.querySelectorAll(".tabs button")
+        .forEach(b=>b.classList.remove("active"));
+
+    event.currentTarget.classList.add("active");
+
+    document.getElementById("view-dados").style.display =
+        tipo === "dados" ? "block" : "none";
+
+    document.getElementById("view-analise").style.display =
+        tipo === "analise" ? "block" : "none";
+}
+</script>
+
+</body>
+</html>
