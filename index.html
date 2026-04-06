@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard de Estoque</title>
+<title>Dashboard de Estoque - Distribuidora Norte Comercial</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -11,18 +11,20 @@
 
 html, body {
     height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f1f5f9;
-    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+    color: #1a2332;
 }
 
 body {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr);
-    gap: 10px;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    gap: 12px;
     min-height: 100vh;
-    padding: 10px;
-    overflow: hidden;
+    padding: 12px;
+    overflow: auto;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -30,53 +32,169 @@ h1 {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-size: clamp(1.3rem, 3vw, 2.2rem);
+    margin: 0;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+
+.subtitulo {
+    text-align: center;
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+    color: #6b7280;
+    margin-top: -2px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
 }
 
 /* CARDS */
 .cards {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
 }
 
 .card {
     background: white;
-    border-radius: 12px;
+    border-radius: 16px;
     text-align: center;
-    padding: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: clamp(12px, 2.5vw, 16px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 110px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(30, 58, 138, 0.15);
 }
 
 .card h3 {
-    font-size: 0.95rem;
+    font-size: clamp(0.75rem, 1.1vw, 1rem);
+    color: #6b7280;
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 1;
 }
 
 .card p {
-    margin-top: 4px;
-    font-size: 1.25rem;
-    font-weight: 700;
+    margin-top: clamp(6px, 1.5vw, 10px);
+    font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+    font-weight: 800;
+    margin-bottom: 0;
+    z-index: 1;
 }
 
-/* ABAS */
+.card.risco {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-left: 4px solid #dc2626;
+}
+
+.card.risco p {
+    color: #dc2626;
+}
+
+.card.alerta {
+    background: linear-gradient(135deg, #fffbf0 0%, #fff1d8 100%);
+    border-left: 4px solid #f59e0b;
+}
+
+.card.alerta p {
+    color: #d97706;
+}
+
+.card.ok {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dbeafe 100%);
+    border-left: 4px solid #10b981;
+}
+
+.card.ok p {
+    color: #10b981;
+}
+
+/* ABAS PRINCIPAIS */
 .tabs {
     display: flex;
     justify-content: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .tabs button {
-    padding: 6px 14px;
+    padding: clamp(6px, 1.3vw, 10px) clamp(14px, 2.5vw, 20px);
     border: none;
-    background: #e2e8f0;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 36px;
+    border: 2px solid transparent;
+    color: #4b5563;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tabs button:hover {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
 }
 
 .tabs button.active {
-    background: #2563eb;
+    background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
     color: white;
+    box-shadow: 0 6px 16px rgba(125, 58, 237, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* SUB-ABAS PARA ANÁLISE */
+.sub-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.sub-tabs button {
+    padding: clamp(6px, 1vw, 10px) clamp(12px, 1.8vw, 16px);
+    border: none;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: clamp(0.75rem, 0.95vw, 0.9rem);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 34px;
+    border: 1px solid transparent;
+    color: #4b5563;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.sub-tabs button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.sub-tabs button.active-sub {
+    background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* MAIN */
@@ -88,11 +206,13 @@ h1 {
 #view-analise {
     height: 100%;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .analise-layout {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     height: 100%;
     min-height: 0;
@@ -100,12 +220,14 @@ h1 {
 
 #view-dados,
 .tabela-analise,
-.grafico-container {
+.grafico-container,
+.diagnostico-container {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    padding: 10px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(30, 58, 138, 0.08);
+    padding: 12px;
     overflow: hidden;
+    border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
 /* TABELA */
@@ -113,15 +235,16 @@ table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    font-size: clamp(11px, 0.95vw, 14px);
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
     background: white;
 }
 
 th, td {
     padding: 5px 4px;
     text-align: center;
-    line-height: 1.15;
+    line-height: 1.2;
     word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 td[title] {
@@ -134,12 +257,45 @@ th {
 }
 
 tr.comprar {
-    background: rgba(239, 68, 68, 0.2);
-    font-weight: bold;
+    background: linear-gradient(90deg, rgba(220, 38, 38, 0.08) 0%, transparent 100%);
+    font-weight: 600;
+    border-left: 3px solid #dc2626;
+}
+
+tr.proximo {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 100%);
+    font-weight: 600;
+    border-left: 3px solid #f59e0b;
 }
 
 tr.ok {
-    background: rgba(34, 197, 94, 0.15);
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.06) 0%, transparent 100%);
+    border-left: 3px solid transparent;
+}
+
+/* Destaque para o valor de compra em amarelo */
+.valor-compra-alerta {
+    color: #d97706;
+    font-weight: bold;
+    background: rgba(245, 158, 11, 0.15);
+    padding: clamp(2px, 0.5vw, 4px) clamp(4px, 1vw, 6px);
+    border-radius: 4px;
+    display: inline-block;
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    white-space: nowrap;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.valor-compra-urgente {
+    color: #dc2626;
+    font-weight: bold;
+    background: rgba(220, 38, 38, 0.1);
+    padding: clamp(2px, 0.5vw, 4px) clamp(4px, 1vw, 6px);
+    border-radius: 4px;
+    display: inline-block;
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    white-space: nowrap;
+    border: 1px solid rgba(220, 38, 38, 0.3);
 }
 
 /* ANALISE FLEX */
@@ -149,19 +305,22 @@ tr.ok {
     gap: 10px;
     height: 100%;
     min-height: 0;
+    flex: 1;
 }
 
 /* TABELA ANALISE */
 .tabela-analise {
     min-height: 0;
+    overflow: auto;
 }
 
 /* GRÁFICO */
 .grafico-container {
     min-height: 0;
     width: 100%;
-    max-width: 700px;
+    max-width: 100%;
     justify-self: center;
+    padding: 4px;
 }
 
 canvas {
@@ -170,73 +329,342 @@ canvas {
     height: 100% !important;
 }
 
-@media (max-width: 900px) {
+/* DIAGNÓSTICO */
+.diagnostico-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    overflow: auto;
+    flex: 1;
+    min-height: 200px;
+}
+
+.diagnostico-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    height: 100%;
+    padding: 4px;
+}
+
+.diagnostico-item {
+    background: white;
+    border-radius: 10px;
+    padding: clamp(8px, 2vw, 12px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.diagnostico-item h4 {
+    font-size: clamp(0.7rem, 1vw, 0.85rem);
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.diagnostico-item p {
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-weight: 600;
+    margin-bottom: 6px;
+    word-break: break-word;
+}
+
+.diagnostico-item .destaque {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.diagnostico-item .critico {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.diagnostico-item .alerta-texto {
+    color: #d97706;
+    font-weight: 700;
+}
+
+.diagnostico-item small {
+    font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+    color: #64748b;
+    display: block;
+    line-height: 1.4;
+}
+
+/* INPUT EDITORÁVEL */
+input.editoravel {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    font-family: inherit;
+    min-height: 32px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input.editoravel:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.btn-restaurar {
+    padding: clamp(6px, 1.5vw, 12px) clamp(12px, 2vw, 16px);
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 32px;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-restaurar:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.btn-restaurar:active {
+    transform: translateY(0);
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #6d28d9 0%, #0891b2 100%);
+}
+
+/* RESPONSIVIDADE - Extra Small (320px - 479px) */
+@media (max-width: 479px) {
     body {
         gap: 8px;
         padding: 8px;
     }
 
+    h1 {
+        font-size: 1.1rem;
+    }
+
+    .subtitulo {
+        font-size: 0.7rem;
+    }
+
     .cards {
+        grid-template-columns: repeat(2, 1fr);
         gap: 8px;
     }
 
     .card {
-        padding: 8px 6px;
-    }
-
-    .tabs button {
-        padding: 5px 10px;
-        font-size: 0.85rem;
-    }
-
-    th, td {
-        padding: 4px 3px;
-        font-size: 10px;
-    }
-
-    .analise-container {
-        grid-template-rows: minmax(0, 1fr) minmax(180px, 1fr);
-    }
-}
-
-@media (max-width: 640px) {
-    body {
-        grid-template-rows: auto auto auto;
-        overflow: auto;
-    }
-
-    h1 {
-        font-size: 1rem;
-    }
-
-    .cards {
-        gap: 6px;
+        padding: 10px 6px;
+        border-radius: 12px;
+        min-height: 100px;
     }
 
     .card h3 {
-        font-size: 0.78rem;
+        font-size: 0.7rem;
     }
 
     .card p {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-top: 4px;
+    }
+
+    .card small {
+        font-size: 0.6rem;
     }
 
     .tabs {
+        flex-direction: column;
         gap: 8px;
     }
 
     .tabs button {
-        flex: 1;
-        max-width: 140px;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        width: 100%;
     }
 
-    .main,
-    #view-dados,
-    #view-analise,
-    .analise-layout,
+    .sub-tabs {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sub-tabs button {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        width: 100%;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    th, td {
+        padding: 6px 3px;
+    }
+
     .analise-container {
-        height: auto;
-        min-height: auto;
+        grid-template-rows: auto 150px;
+    }
+
+    .grafico-container {
+        min-height: 150px;
+    }
+
+    input.editoravel {
+        padding: 6px 6px;
+        font-size: 0.9rem;
+    }
+
+    .btn-restaurar {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        width: 100%;
+    }
+
+    .diagnostico-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .diagnostico-item {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .diagnostico-item h4 {
+        font-size: 0.8rem;
+    }
+
+    .diagnostico-item p {
+        font-size: 0.95rem;
+    }
+
+    .diagnostico-item small {
+        font-size: 0.7rem;
+    }
+
+    .responsive-table td::before {
+        font-size: 0.75rem;
+    }
+
+    .responsive-table td:first-child {
+        font-size: 0.95rem;
+    }
+
+    .responsive-table tr {
+        padding: 10px;
+        gap: 3px;
+    }
+
+    .valor-compra-alerta,
+    .valor-compra-urgente {
+        padding: 3px 6px;
+        font-size: 0.85rem;
+    }
+}
+
+/* RESPONSIVIDADE - Small (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+    body {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .subtitulo {
+        font-size: 0.8rem;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .card {
+        padding: 12px 8px;
+        min-height: 105px;
+    }
+
+    .card h3 {
+        font-size: 0.8rem;
+    }
+
+    .card p {
+        font-size: 1.1rem;
+        margin-top: 6px;
+    }
+
+    .tabs {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .tabs button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        flex: 0 1 calc(50% - 5px);
+    }
+
+    .sub-tabs {
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sub-tabs button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        flex: 0 1 calc(33% - 5px);
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th, td {
+        padding: 6px 4px;
     }
 
     .analise-container {
@@ -244,14 +672,211 @@ canvas {
     }
 
     .grafico-container {
-        width: 100%;
-        max-width: none;
         min-height: 180px;
     }
 
+    input.editoravel {
+        padding: 6px 6px;
+        font-size: 0.95rem;
+    }
+
+    .btn-restaurar {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+
+    .diagnostico-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .diagnostico-item {
+        padding: 12px;
+    }
+
+    .diagnostico-item h4 {
+        font-size: 0.85rem;
+    }
+
+    .diagnostico-item p {
+        font-size: 0.95rem;
+    }
+
+    .responsive-table td::before {
+        font-size: 0.8rem;
+    }
+
+    .responsive-table td:first-child {
+        font-size: 1rem;
+    }
+
+    .responsive-table tr {
+        padding: 12px;
+        gap: 4px;
+    }
+}
+
+/* RESPONSIVIDADE - Medium (768px - 899px) */
+@media (min-width: 768px) and (max-width: 899px) {
+    body {
+        gap: 9px;
+        padding: 9px;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    .cards {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 9px;
+    }
+
+    .card {
+        padding: 9px;
+    }
+
+    .card h3 {
+        font-size: 0.8rem;
+    }
+
+    .tabs button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .sub-tabs button {
+        padding: 4px 11px;
+        font-size: 0.8rem;
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th, td {
+        padding: 4px 3px;
+    }
+
+    .analise-container {
+        grid-template-rows: minmax(0, 1fr) minmax(200px, 1.1fr);
+    }
+
+    .diagnostico-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* RESPONSIVIDADE - Large (900px+) */
+@media (min-width: 900px) {
+    .cards {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .tabs button {
+        padding: 6px 14px;
+        font-size: 1rem;
+    }
+
+    .sub-tabs button {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+    }
+
+    table {
+        font-size: clamp(11px, 0.95vw, 14px);
+    }
+
+    th, td {
+        padding: 5px 4px;
+    }
+
+    .diagnostico-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .analise-container {
+        grid-template-rows: minmax(0, 1fr) minmax(220px, 1.15fr);
+    }
+}
+
+/*  MEDIA QUERY LEGADO - Mantido para compatibilidade */
+@media (max-width: 640px) {
+    body {
+        grid-template-rows: auto auto auto auto;
+        overflow: auto;
+    }
+
+    h1 {
+        font-size: 1rem;
+    }
+    
+    .subtitulo {
+        font-size: 0.7rem;
+    }
+
+    .cards {
+        gap: 6px;
+    }
+
+    .card h3 {
+        font-size: 0.7rem;
+    }
+
+    .card p {
+        font-size: 1rem;
+    }
+
+    .tabs {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tabs button {
+        flex: 1;
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+    
+    .sub-tabs {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .sub-tabs button {
+        flex: 1;
+        min-width: 80px;
+        font-size: 0.7rem;
+    }
+
+    .main,
+    #view-dados,
+    #view-analise,
+    .analise-layout {
+        height: auto;
+        min-height: auto;
+    }
+
+    .analise-container {
+        grid-template-rows: auto 200px;
+    }
+
+    .grafico-container {
+        width: 100%;
+        max-width: none;
+        min-height: 200px;
+    }
+    
+    .diagnostico-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* TABELA RESPONSIVA COMPLETA */
     .responsive-table {
         border-collapse: separate;
         table-layout: auto;
+        border-spacing: 0;
     }
 
     .responsive-table thead {
@@ -260,40 +885,45 @@ canvas {
 
     .responsive-table tbody {
         display: grid;
-        gap: 10px;
+        gap: 12px;
     }
 
     .responsive-table tr {
         display: grid;
-        gap: 3px;
-        padding: 10px;
+        gap: 4px;
+        padding: 12px;
         border: 1px solid #dbe4ee;
         border-radius: 12px;
         background: #f8fafc;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
     }
 
     .responsive-table tr.comprar {
-        background: rgba(239, 68, 68, 0.12);
-        border-color: rgba(220, 38, 38, 0.25);
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(220, 38, 38, 0.3);
+    }
+
+    .responsive-table tr.proximo {
+        background: rgba(245, 158, 11, 0.15);
+        border-color: rgba(217, 119, 6, 0.3);
     }
 
     .responsive-table tr.ok {
-        background: rgba(34, 197, 94, 0.10);
-        border-color: rgba(22, 163, 74, 0.18);
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(22, 163, 74, 0.2);
     }
 
     .responsive-table td {
         display: grid;
-        grid-template-columns: minmax(104px, 42%) minmax(0, 1fr);
-        align-items: start;
-        gap: 8px;
-        padding: 4px 0;
-        border-bottom: 1px dashed #dbe4ee;
+        grid-template-columns: minmax(100px, 1fr) minmax(60px, 1fr);
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px dashed #e2e8f0;
         text-align: left;
-        font-size: 0.82rem;
-        word-break: normal;
-        overflow-wrap: anywhere;
+        font-size: 0.85rem;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .responsive-table td:last-child {
@@ -304,25 +934,38 @@ canvas {
         content: attr(data-label);
         font-weight: 700;
         color: #334155;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .responsive-table td:first-child {
         grid-template-columns: 1fr;
-        gap: 2px;
+        gap: 4px;
         padding-top: 0;
-        padding-bottom: 6px;
-        margin-bottom: 2px;
-        border-bottom: 1px solid #cbd5e1;
-        font-size: 0.95rem;
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+        border-bottom: 2px solid #cbd5e1;
+        font-size: 1rem;
         font-weight: 700;
         color: #0f172a;
     }
 
     .responsive-table td:first-child::before {
-        font-size: 0.7rem;
-        letter-spacing: 0.04em;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         color: #64748b;
+    }
+
+    .responsive-table tr:nth-child(even) {
+        background-color: rgba(148, 163, 184, 0.03);
+    }
+
+    .responsive-table input.editoravel {
+        padding: 6px 8px;
+        font-size: 0.9rem;
+        min-height: 36px;
     }
 }
 </style>
@@ -331,23 +974,25 @@ canvas {
 <body>
 
 <h1>📊 Dashboard de Controle de Estoque</h1>
+<div class="subtitulo">Distribuidora Norte Comercial - Consultoria Logística</div>
 
 <div class="tabs">
-<button type="button" onclick="trocarAba(event, 'dados')" class="active">Dados dos Produtos</button>
-<button type="button" onclick="trocarAba(event, 'analise')">Análise</button>
+<button type="button" onclick="trocarAba(event, 'dados')" class="active">📋 Dados dos Produtos</button>
+<button type="button" onclick="trocarAba(event, 'analise')">📈 Análise e Diagnóstico</button>
 </div>
 
 <div class="main">
 
 <!-- DADOS -->
 <div id="view-dados">
+<h2 style="margin: 0 0 12px 0; font-size: 1.1rem; font-weight: 600; background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">✏️ Dados dos Produtos (editáveis)</h2>
 <table class="responsive-table">
 <thead>
 <tr>
 <th>Produto</th>
 <th>Consumo Mensal</th>
-<th>TR</th>
-<th>Segurança</th>
+<th>TR (dias)</th>
+<th>Segurança (dias)</th>
 <th>Lote</th>
 <th>Estoque Atual</th>
 <th>Estoque Médio</th>
@@ -357,42 +1002,65 @@ canvas {
 </thead>
 <tbody id="dadosIniciais"></tbody>
 </table>
+<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+    <button onclick="restaurarValoresPadroes()" class="btn-restaurar">↻ Restaurar Valores Padrões</button>
+</div>
 </div>
 
-<!-- ANALISE -->
+<!-- ANALISE E DIAGNÓSTICO -->
 <div id="view-analise" style="display:none;">
 <div class="analise-layout">
 
+<!-- Cards de resumo -->
 <div class="cards" id="cards"></div>
 
-<div class="analise-container">
-
-<div class="tabela-analise">
-<table class="responsive-table">
-<thead>
-<tr>
-<th>Produto</th>
-<th>Giro</th>
-<th>Consumo Diário</th>
-<th>Cobertura</th>
-<th>Ruptura (%)</th>
-<th>Est. Mín</th>
-<th>Est. Seg</th>
-<th>P. Pedido</th>
-<th>Est. Máx</th>
-<th>Comprar?</th>
-<th>Quanto</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
+<!-- Sub-abas para navegação interna -->
+<div class="sub-tabs">
+    <button type="button" onclick="trocarSubAba(event, 'tabela')" class="active-sub">📊 Tabela de Indicadores</button>
+    <button type="button" onclick="trocarSubAba(event, 'grafico')">📉 Gráfico de Estoques</button>
+    <button type="button" onclick="trocarSubAba(event, 'diagnostico')">🔍 Diagnóstico Completo</button>
 </div>
 
-<div class="grafico-container">
-<canvas id="grafico"></canvas>
+<!-- Conteúdo da Tabela -->
+<div id="sub-tabela" class="analise-container">
+    <div class="tabela-analise">
+        <table class="responsive-table">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Giro</th>
+                    <th>Consumo Diário</th>
+                    <th>Cobertura (dias)</th>
+                    <th>Ruptura (%)</th>
+                    <th>Est. Mín</th>
+                    <th>Est. Seg</th>
+                    <th>P. Pedido</th>
+                    <th>Est. Máx</th>
+                    <th>Comprar?</th>
+                    <th>Quanto</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+    <div class="grafico-container" style="display:none;">
+        <canvas id="grafico"></canvas>
+    </div>
 </div>
 
+<!-- Conteúdo do Gráfico -->
+<div id="sub-grafico" class="analise-container" style="display:none;">
+    <div class="grafico-container">
+        <canvas id="grafico2"></canvas>
+    </div>
+    <div class="tabela-analise" style="display:none;"></div>
 </div>
+
+<!-- Conteúdo do Diagnóstico -->
+<div id="sub-diagnostico" class="diagnostico-container" style="display:none;">
+    <div class="diagnostico-grid" id="diagnosticoTextual"></div>
+</div>
+
 </div>
 </div>
 
@@ -407,163 +1075,363 @@ const dados = [
 ];
 
 // DADOS INICIAIS
-dados.forEach(p => {
+dados.forEach((p, idx) => {
     document.getElementById("dadosIniciais").innerHTML += `
     <tr>
         <td data-label="Produto">${p.produto}</td>
-        <td data-label="Consumo Mensal">${p.consumo}</td>
-        <td data-label="TR">${p.tr}</td>
-        <td data-label="Segurança">${p.ds}</td>
-        <td data-label="Lote">${p.lote}</td>
-        <td data-label="Estoque Atual">${p.atual}</td>
-        <td data-label="Estoque Médio">${p.estoqueMedio}</td>
-        <td data-label="Faltas">${p.faltas}</td>
-        <td data-label="Pedidos">${p.pedidos}</td>
+        <td data-label="Consumo Mensal"><input type="number" class="editoravel" data-idx="${idx}" data-field="consumo" value="${p.consumo}"></td>
+        <td data-label="TR (dias)"><input type="number" class="editoravel" data-idx="${idx}" data-field="tr" value="${p.tr}"></td>
+        <td data-label="Segurança (dias)"><input type="number" class="editoravel" data-idx="${idx}" data-field="ds" value="${p.ds}"></td>
+        <td data-label="Lote"><input type="number" class="editoravel" data-idx="${idx}" data-field="lote" value="${p.lote}"></td>
+        <td data-label="Estoque Atual"><input type="number" class="editoravel" data-idx="${idx}" data-field="atual" value="${p.atual}"></td>
+        <td data-label="Estoque Médio"><input type="number" class="editoravel" data-idx="${idx}" data-field="estoqueMedio" value="${p.estoqueMedio}"></td>
+        <td data-label="Faltas"><input type="number" class="editoravel" data-idx="${idx}" data-field="faltas" value="${p.faltas}"></td>
+        <td data-label="Pedidos"><input type="number" class="editoravel" data-idx="${idx}" data-field="pedidos" value="${p.pedidos}"></td>
     </tr>`;
 });
 
-// ANÁLISE
-let totalRuptura = 0;
-let itensComprar = 0;
-
-dados.forEach(p => {
-
-    let cd = p.consumo / 30;
-    let giro = p.consumo / p.estoqueMedio;
-    let cobertura = p.atual / cd;
-    let ruptura = (p.faltas / p.pedidos) * 100;
-
-    let emin = cd * p.tr;
-    let es = cd * p.ds;
-    let pp = emin + es;
-    let emax = emin + p.lote;
-
-    let estoqueReal = p.atual - es;
-    let comprar = estoqueReal <= pp;
-    let quanto = comprar ? (emax - p.atual) : 0;
-    let cdTexto = cd.toFixed(2);
-    let giroTexto = giro.toFixed(2);
-    let coberturaTexto = cobertura.toFixed(2);
-    let rupturaTexto = ruptura.toFixed(1);
-    let eminTexto = emin.toFixed(0);
-    let esTexto = es.toFixed(0);
-    let ppTexto = pp.toFixed(0);
-    let emaxTexto = emax.toFixed(0);
-
-    if (comprar) itensComprar++;
-    totalRuptura += ruptura;
-
-    document.getElementById("tbody").innerHTML += `
-    <tr class="${comprar ? "comprar" : "ok"}">
-        <td data-label="Produto">${p.produto}</td>
-        <td data-label="Giro" title="Giro = Consumo Mensal / Estoque Medio (${p.consumo} / ${p.estoqueMedio})">${giroTexto}</td>
-        <td data-label="Consumo Diário" title="Consumo Diario = Consumo Mensal / 30 (${p.consumo} / 30)">${cdTexto}</td>
-        <td data-label="Cobertura" title="Cobertura = Estoque Atual / Consumo Diario (${p.atual} / ${cdTexto})">${coberturaTexto}</td>
-        <td data-label="Ruptura (%)" title="Ruptura = Faltas / Pedidos x 100 (${p.faltas} / ${p.pedidos} x 100)">${rupturaTexto}%</td>
-        <td data-label="Est. Mín" title="Estoque Minimo = Consumo Diario x TR (${cdTexto} x ${p.tr})">${eminTexto}</td>
-        <td data-label="Est. Seg" title="Estoque de Seguranca = Consumo Diario x Seguranca (${cdTexto} x ${p.ds})">${esTexto}</td>
-        <td data-label="P. Pedido" title="Ponto de Pedido = Est. Min + Est. Seg (${eminTexto} + ${esTexto})">${ppTexto}</td>
-        <td data-label="Est. Máx" title="Estoque Maximo = Est. Min + Lote (${eminTexto} + ${p.lote})">${emaxTexto}</td>
-        <td data-label="Comprar?" title="Comprar se Estoque Real <= Ponto de Pedido ((${p.atual} - ${esTexto}) <= ${ppTexto})">
-            ${
-                comprar
-                ? `<strong style="color:#dc2626;">⚠️ COMPRAR</strong>`
-                : `<span style="color:#16a34a;">OK</span>`
-            }
-        </td>
-        <td data-label="Quanto" title="${comprar ? `Quanto Comprar = Est. Max - Estoque Atual (${emaxTexto} - ${p.atual})` : 'Nao precisa comprar, entao o valor e 0'}">${quanto}</td>
-    </tr>`;
+// Adiciona listeners para recalcular análise quando dados forem editados
+document.querySelectorAll('.editoravel').forEach(input => {
+    input.addEventListener('change', () => {
+        const idx = parseInt(input.dataset.idx);
+        const field = input.dataset.field;
+        dados[idx][field] = parseFloat(input.value) || 0;
+        recalcularAnalise();
+    });
+    input.addEventListener('input', () => {
+        const idx = parseInt(input.dataset.idx);
+        const field = input.dataset.field;
+        dados[idx][field] = parseFloat(input.value) || 0;
+        recalcularAnalise();
+    });
 });
 
-// CARDS
-document.getElementById("cards").innerHTML = `
-<div class="card"><h3>Itens para Comprar</h3><p>${itensComprar}</p></div>
-<div class="card"><h3>Ruptura Média</h3><p>${(totalRuptura / dados.length).toFixed(1)}%</p></div>
-<div class="card"><h3>Total Produtos</h3><p>${dados.length}</p></div>
-`;
+// RESTAURAR VALORES PADRÕES
+function restaurarValoresPadroes() {
+    dados[0] = {produto:"Arroz", consumo:300, estoqueMedio:100, atual:150, faltas:2, pedidos:50, tr:8, ds:4, lote:200};
+    dados[1] = {produto:"Feijão", consumo:240, estoqueMedio:80, atual:90, faltas:5, pedidos:40, tr:6, ds:3, lote:150};
+    dados[2] = {produto:"Óleo", consumo:150, estoqueMedio:60, atual:140, faltas:6, pedidos:30, tr:10, ds:5, lote:200};
+    dados[3] = {produto:"Açúcar", consumo:180, estoqueMedio:50, atual:200, faltas:1, pedidos:25, tr:7, ds:3, lote:120};
+    
+    // Atualiza os inputs com os valores padrões
+    document.querySelectorAll('.editoravel').forEach(input => {
+        const idx = parseInt(input.dataset.idx);
+        const field = input.dataset.field;
+        input.value = dados[idx][field];
+    });
+    
+    recalcularAnalise();
+}
 
-// GRÁFICO
-new Chart(document.getElementById("grafico"), {
-    type: 'bar',
-    data: {
-        labels: dados.map(p => p.produto),
-        datasets: [
-            { label: 'Atual', data: dados.map(p => p.atual), backgroundColor: '#2563eb' },
-            { label: 'Mínimo', data: dados.map(p => p.consumo/30*p.tr), backgroundColor: '#94a3b8' },
-            { label: 'Ponto de Pedido', data: dados.map(p => (p.consumo/30*p.tr)+(p.consumo/30*p.ds)), backgroundColor: '#f59e0b' },
-            { label: 'Máximo', data: dados.map(p => (p.consumo/30*p.tr)+p.lote), backgroundColor: '#dc2626' }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        layout: {
-            padding: {
-                top: 6,
-                right: 10,
-                bottom: 0,
-                left: 10
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    boxWidth: 12,
-                    padding: 12,
-                    font: {
-                        size: 11
-                    }
+let graficoInstance = null;
+let graficoInstance2 = null;
+
+// ANÁLISE PRINCIPAL
+function recalcularAnalise() {
+    let totalRuptura = 0;
+    let itensComprar = 0;
+    let itensProximoCompra = 0;
+    let maioresGiro = {produto:"", valor:0};
+    let menoresGiro = {produto:"", valor:999};
+    let maiorRuptura = {produto:"", valor:0};
+    let maiorCobertura = {produto:"", valor:0};
+
+    document.getElementById("tbody").innerHTML = "";
+    
+    dados.forEach(p => {
+        let cd = p.consumo / 30;
+        let giro = p.consumo / p.estoqueMedio;
+        let cobertura = p.atual / cd;
+        let ruptura = (p.faltas / p.pedidos) * 100;
+
+        let emin = cd * p.tr;
+        let es = cd * p.ds;
+        let pp = emin + es;
+        let emax = emin + p.lote;
+
+        let comprar = p.atual <= pp;
+        let proximo = !comprar && p.atual <= pp + (emax - pp) * 0.25;
+        let quanto = comprar ? (emax - p.atual) : (proximo ? (emax - p.atual) : 0);
+        
+        if (comprar) itensComprar++;
+        if (proximo) itensProximoCompra++;
+        
+        let cdTexto = cd.toFixed(2);
+        let giroTexto = giro.toFixed(2);
+        let coberturaTexto = cobertura.toFixed(2);
+        let rupturaTexto = ruptura.toFixed(1);
+        let eminTexto = emin.toFixed(0);
+        let esTexto = es.toFixed(0);
+        let ppTexto = pp.toFixed(0);
+        let emaxTexto = emax.toFixed(0);
+
+        totalRuptura += ruptura;
+        
+        // Coletar métricas para diagnóstico
+        if (giro > maioresGiro.valor) { maioresGiro = {produto:p.produto, valor:giro}; }
+        if (giro < menoresGiro.valor) { menoresGiro = {produto:p.produto, valor:giro}; }
+        if (ruptura > maiorRuptura.valor) { maiorRuptura = {produto:p.produto, valor:ruptura}; }
+        if (cobertura > maiorCobertura.valor) { maiorCobertura = {produto:p.produto, valor:cobertura}; }
+
+        // Formatação do valor de compra com cores diferentes
+        let valorCompraHtml = "";
+        if (comprar) {
+            valorCompraHtml = `<span class="valor-compra-urgente" title="Compra necessária - estoque abaixo/igual ao ponto de pedido">${quanto}</span>`;
+        } else if (proximo) {
+            valorCompraHtml = `<span class="valor-compra-alerta" title="Compra sugerida - estoque próximo ao ponto de pedido">${quanto}</span>`;
+        } else {
+            valorCompraHtml = `${quanto}`;
+        }
+
+        document.getElementById("tbody").innerHTML += `
+        <tr class="${comprar ? "comprar" : proximo ? "proximo" : "ok"}">
+            <td data-label="Produto">${p.produto}</td>
+            <td data-label="Giro" title="Giro = Consumo Mensal / Estoque Medio (${p.consumo} / ${p.estoqueMedio})">${giroTexto}</td>
+            <td data-label="Consumo Diário" title="Consumo Diario = Consumo Mensal / 30 (${p.consumo} / 30)">${cdTexto}</td>
+            <td data-label="Cobertura (dias)" title="Cobertura = Estoque Atual / Consumo Diario (${p.atual} / ${cdTexto})">${coberturaTexto}</td>
+            <td data-label="Ruptura (%)" title="Ruptura = Faltas / Pedidos x 100 (${p.faltas} / ${p.pedidos} x 100)">${rupturaTexto}%</td>
+            <td data-label="Est. Mín" title="Estoque Minimo = Consumo Diario x TR (${cdTexto} x ${p.tr})">${eminTexto}</td>
+            <td data-label="Est. Seg" title="Estoque de Seguranca = Consumo Diario x Seguranca (${cdTexto} x ${p.ds})">${esTexto}</td>
+            <td data-label="P. Pedido" title="Ponto de Pedido = Est. Min + Est. Seg (${eminTexto} + ${esTexto})">${ppTexto}</td>
+            <td data-label="Est. Máx" title="Estoque Maximo = Est. Min + Lote (${eminTexto} + ${p.lote})">${emaxTexto}</td>
+            <td data-label="Comprar?" title="Estoque Atual: ${p.atual} | Ponto de Pedido: ${ppTexto}">
+                ${
+                    comprar
+                    ? `<strong style="color:#dc2626;">⚠️ COMPRAR URGENTE</strong>`
+                    : proximo
+                    ? `<strong style="color:#d97706;">🔶 Compra sugerida</strong>`
+                    : `<span style="color:#16a34a;">✅ OK</span>`
                 }
-            }
+            </td>
+            <td data-label="Quanto" title="${(comprar || proximo) ? `Quanto Comprar = Est. Max - Estoque Atual (${emaxTexto} - ${p.atual})` : 'Não precisa comprar'}">${valorCompraHtml}</td>
+        </tr>`;
+    });
+
+    let rupturaMedia = totalRuptura / dados.length;
+    
+    // Diagnóstico do controle de estoque
+    let diagnosticoEstoque = "";
+    let diagnosticoClasse = "ok";
+    let pontosFracos = [];
+    
+    if (rupturaMedia > 10) {
+        diagnosticoEstoque = "⚠️ Ruptura alta - controle deficiente";
+        diagnosticoClasse = "risco";
+        pontosFracos.push("Ruptura acima de 10%");
+    }
+    if (itensComprar > 0) {
+        diagnosticoEstoque = "⚠️ Produtos em risco de ruptura - necessidade de compra imediata";
+        diagnosticoClasse = "risco";
+        pontosFracos.push("Estoque abaixo do ponto de pedido");
+    }
+    if (itensProximoCompra > 0 && itensComprar === 0) {
+        diagnosticoEstoque = "🔶 Atenção - produtos próximos do ponto de pedido";
+        diagnosticoClasse = "alerta";
+        pontosFracos.push(`${itensProximoCompra} produto(s) com compra sugerida`);
+    }
+    if (maiorCobertura.valor > 25) {
+        if (diagnosticoClasse !== "risco") diagnosticoClasse = "alerta";
+        pontosFracos.push("Cobertura excessiva (estoque alto)");
+    }
+    if (rupturaMedia <= 10 && itensComprar === 0 && maiorCobertura.valor <= 25) {
+        diagnosticoEstoque = "✅ Controle razoável, mas precisa monitorar indicadores";
+        diagnosticoClasse = "ok";
+    }
+
+    // CARDS
+    document.getElementById("cards").innerHTML = `
+    <div class="card ${itensComprar > 0 ? 'risco' : ''}">
+        <h3>📦 Comprar Urgente</h3>
+        <p>${itensComprar}</p>
+    </div>
+    <div class="card ${itensProximoCompra > 0 ? 'alerta' : ''}">
+        <h3>🔶 Compra Sugerida</h3>
+        <p>${itensProximoCompra}</p>
+        <small style="font-size:0.7rem;">Próximo ao ponto de pedido</small>
+    </div>
+    <div class="card">
+        <h3>📊 Ruptura Média</h3>
+        <p>${rupturaMedia.toFixed(1)}%</p>
+    </div>
+    <div class="card ${diagnosticoClasse}">
+        <h3>🔍 Diagnóstico Geral</h3>
+        <p style="font-size:0.85rem;">${diagnosticoEstoque}</p>
+    </div>
+    `;
+
+    // DIAGNÓSTICO TEXTUAL DAS PERGUNTAS DA ATIVIDADE
+    document.getElementById("diagnosticoTextual").innerHTML = `
+        <div class="diagnostico-item">
+            <h4>🏆 Maior Giro</h4>
+            <p><span class="destaque">${maioresGiro.produto}</span> (${maioresGiro.valor.toFixed(2)} giros/mês)</p>
+            <small>Estoque renova mais vezes - bom sinal</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>🐢 Menor Giro</h4>
+            <p><span class="alerta-texto">${menoresGiro.produto}</span> (${menoresGiro.valor.toFixed(2)} giros/mês)</p>
+            <small>Produto parado - necessidade de análise</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>⚠️ Maior Risco de Ruptura</h4>
+            <p><span class="critico">${maiorRuptura.produto}</span> (${maiorRuptura.valor.toFixed(1)}%)</p>
+            <small>Maior percentual de faltas em relação aos pedidos</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>📈 Estoque mais Alto</h4>
+            <p><span class="alerta-texto">${maiorCobertura.produto}</span> (${maiorCobertura.valor.toFixed(1)} dias de cobertura)</p>
+            <small>Cobertura acima do ideal - custo de armazenagem elevado</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>🛒 Precisa Comprar Urgente?</h4>
+            <p>${itensComprar > 0 ? `<span class="critico">SIM - ${itensComprar} produto(s)</span>` : itensProximoCompra > 0 ? `<span class="alerta-texto">Compra sugerida para ${itensProximoCompra} produto(s)</span>` : '<span class="destaque">NÃO</span>'}</p>
+            <small>${itensComprar > 0 ? "Estoque abaixo do ponto de pedido" : "Todos os produtos estão acima do ponto de pedido"}</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>📋 O estoque está bem controlado?</h4>
+            <p class="${diagnosticoClasse === 'ok' ? 'destaque' : (diagnosticoClasse === 'risco' ? 'critico' : 'alerta-texto')}">${diagnosticoEstoque}</p>
+            <small>${pontosFracos.length > 0 ? `Pontos de atenção: ${pontosFracos.join(", ")}` : "Todos os indicadores dentro da normalidade"}</small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>💡 Principais Sugestões</h4>
+            <small>
+                • Implementar ERP com cálculo automático do ponto de pedido<br>
+                • Reduzir estoque do ${maiorCobertura.produto} (promoção/descarte)<br>
+                • Revisar lote de compra do ${maiorRuptura.produto}<br>
+                • Monitorar giro do ${menoresGiro.produto}<br>
+                • Treinar equipe no uso de indicadores (giro, cobertura, ruptura)
+            </small>
+        </div>
+        <div class="diagnostico-item">
+            <h4>📊 Resumo dos Indicadores</h4>
+            <small>
+                • Giro médio: ${(dados.reduce((acc, p) => acc + (p.consumo / p.estoqueMedio), 0) / dados.length).toFixed(2)} giros/mês<br>
+                • Cobertura média: ${(dados.reduce((acc, p) => acc + (p.atual / (p.consumo/30)), 0) / dados.length).toFixed(1)} dias<br>
+                • Ruptura média: ${rupturaMedia.toFixed(1)}%<br>
+                • Produtos com estoque abaixo do ideal: ${itensComprar + itensProximoCompra}
+            </small>
+        </div>
+    `;
+
+    // GRÁFICO (atualiza ambos os canvas)
+    const canvas1 = document.getElementById("grafico");
+    const canvas2 = document.getElementById("grafico2");
+    
+    // Destroi ambas as instâncias antigas se existirem
+    if (graficoInstance) {
+        graficoInstance.destroy();
+    }
+    if (graficoInstance2) {
+        graficoInstance2.destroy();
+    }
+    
+    const chartData = {
+        type: 'bar',
+        data: {
+            labels: dados.map(p => p.produto),
+            datasets: [
+                { label: 'Estoque Atual', data: dados.map(p => p.atual), backgroundColor: '#2563eb', borderRadius: 4 },
+                { label: 'Estoque Mínimo', data: dados.map(p => p.consumo/30*p.tr), backgroundColor: '#94a3b8', borderRadius: 4 },
+                { label: 'Estoque Segurança', data: dados.map(p => p.consumo/30*p.ds), backgroundColor: '#22c55e', borderRadius: 4 },
+                { label: 'Ponto de Pedido', data: dados.map(p => (p.consumo/30*p.tr)+(p.consumo/30*p.ds)), backgroundColor: '#f59e0b', borderRadius: 4 },
+                { label: 'Estoque Máximo', data: dados.map(p => (p.consumo/30*p.tr)+p.lote), backgroundColor: '#dc2626', borderRadius: 4 }
+            ]
         },
-        datasets: {
-            bar: {
-                maxBarThickness: 36,
-                categoryPercentage: 0.7,
-                barPercentage: 0.9,
-                borderRadius: 4
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw} unidades`;
+                        }
+                    }
                 },
-                ticks: {
-                    maxRotation: 0,
-                    minRotation: 0,
-                    font: {
-                        size: 11
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 12,
+                        font: { size: 11 }
                     }
                 }
             },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    font: {
-                        size: 11
-                    }
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Quantidade (unidades)', font: { size: 10 } },
+                    ticks: { font: { size: 11 } }
                 }
             }
         }
+    };
+    
+    graficoInstance = new Chart(canvas1, chartData);
+    graficoInstance2 = new Chart(canvas2, chartData);
+}
+
+// CONTROLE DE SUB-ABAS
+function trocarSubAba(event, tipo) {
+    // Remove active de todos os botões
+    document.querySelectorAll('.sub-tabs button').forEach(btn => {
+        btn.classList.remove('active-sub');
+    });
+    event.currentTarget.classList.add('active-sub');
+    
+    // Esconde todos os containers
+    document.getElementById('sub-tabela').style.display = 'none';
+    document.getElementById('sub-grafico').style.display = 'none';
+    document.getElementById('sub-diagnostico').style.display = 'none';
+    
+    // Mostra o container selecionado
+    if (tipo === 'tabela') {
+        document.getElementById('sub-tabela').style.display = 'flex';
+        // Ajusta para mostrar tabela e esconder gráfico dentro do container
+        const tabelaDiv = document.querySelector('#sub-tabela .tabela-analise');
+        const graficoDiv = document.querySelector('#sub-tabela .grafico-container');
+        if (tabelaDiv) tabelaDiv.style.display = 'block';
+        if (graficoDiv) graficoDiv.style.display = 'none';
+    } else if (tipo === 'grafico') {
+        document.getElementById('sub-grafico').style.display = 'flex';
+        const graficoDiv = document.querySelector('#sub-grafico .grafico-container');
+        const tabelaDiv = document.querySelector('#sub-grafico .tabela-analise');
+        if (graficoDiv) graficoDiv.style.display = 'block';
+        if (tabelaDiv) tabelaDiv.style.display = 'none';
+    } else if (tipo === 'diagnostico') {
+        document.getElementById('sub-diagnostico').style.display = 'block';
     }
-});
+}
 
-// ABAS
-function trocarAba(event, tipo){
-    document.querySelectorAll(".tabs button")
-        .forEach(b=>b.classList.remove("active"));
-
+// CONTROLE DE ABAS PRINCIPAIS
+function trocarAba(event, tipo) {
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
     event.currentTarget.classList.add("active");
 
-    document.getElementById("view-dados").style.display =
-        tipo === "dados" ? "block" : "none";
-
-    document.getElementById("view-analise").style.display =
-        tipo === "analise" ? "block" : "none";
+    document.getElementById("view-dados").style.display = tipo === "dados" ? "block" : "none";
+    document.getElementById("view-analise").style.display = tipo === "analise" ? "block" : "none";
+    
+    // Se for análise, garante que a sub-aba inicial é a tabela
+    if (tipo === "analise") {
+        document.querySelectorAll('.sub-tabs button').forEach(btn => btn.classList.remove('active-sub'));
+        document.querySelector('.sub-tabs button:first-child').classList.add('active-sub');
+        document.getElementById('sub-tabela').style.display = 'flex';
+        document.getElementById('sub-grafico').style.display = 'none';
+        document.getElementById('sub-diagnostico').style.display = 'none';
+        
+        // Ajusta visibilidade interna
+        const tabelaDiv = document.querySelector('#sub-tabela .tabela-analise');
+        const graficoDiv = document.querySelector('#sub-tabela .grafico-container');
+        if (tabelaDiv) tabelaDiv.style.display = 'block';
+        if (graficoDiv) graficoDiv.style.display = 'none';
+    }
 }
+
+recalcularAnalise();
 </script>
 
 </body>
